@@ -1,0 +1,150 @@
+/* all-teams.css */
+
+/* Reset some basic styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Allow left panel to stay fixed */
+}
+
+/* Wrapper for the entire layout */
+#wrapper {
+    display: flex;
+    flex-grow: 1;
+}
+
+/* User info section */
+#user-info {
+    width: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed; /* Fixes the sidebar */
+    height: 100%;
+    background-color: #f4f4f4; /* Background color for better visual separation */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    top: 0; /* Aligns it to the top */
+    left: 0; /* Aligns it to the left */
+    z-index: 1000; /* Ensures it is above other content */
+}
+
+#user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+/* Styles for the buttons in the sidebar */
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Container for the team cards */
+#teams-container {
+    flex: 1;
+    margin-left: 240px; /* Adjust margin to accommodate the fixed sidebar */
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Use gap for consistent spacing between cards */
+    justify-content: flex-start; /* Aligns cards to the start */
+    align-content: flex-start; /* Align the content at the top */
+}
+
+/* Style for individual team cards */
+.team {
+    flex: 1 1 calc(25% - 20px); /* Calculates width for 3 columns, including gap */
+    max-width: calc(33.33% - 20px); /* Ensures max-width does not exceed a third of the container width */
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.team:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.team-content {
+    padding: 15px;
+}
+
+/* Team header */
+.team h3 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.team p {
+    margin: 10px 0;
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+/* Join button styles */
+.join-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    align-self: center; /* Centers button in card */
+    margin-top: 10px;
+    border-radius: 20px; /* Adds rounded corners to the button */
+}
+
+.join-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* Slightly enlarges the button on hover */
+}
+
+.join-btn.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .team {
+        flex: 1 1 calc(50% - 20px); /* Switch to 2 columns for smaller screens */
+        max-width: calc(50% - 20px); /* Ensures max-width does not exceed half of the container width */
+    }
+}
+
+@media (max-width: 800px) {
+    .team {
+        flex: 1 1 100%; /* Switch to 1 column for mobile */
+        max-width: 100%; /* Ensures max-width does not exceed the container width */
+    }
+}

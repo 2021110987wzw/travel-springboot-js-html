@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>修改个人信息</title>
+  <link rel="stylesheet" href="edit-personal-info.css">
+</head>
+<body>
+<div id="edit-info">
+  <h1>修改个人信息</h1>
+  <form id="edit-info-form">
+    <div>
+      <label for="current-avatar">头像:</label>
+      <img id="current-avatar" src="" alt="Current Avatar" width="100" height="100">
+      <button type="button" id="change-avatar-btn">修改头像</button>
+    </div>
+    <label for="username">用户名:</label>
+    <input type="text" id="username" name="username"><br>
+    <label for="email">邮箱:</label>
+    <input type="email" id="email" name="email"><br>
+    <label for="gender">性别:</label>
+    <select id="gender" name="gender">
+      <option value="MALE">男</option>
+      <option value="FEMALE">女</option>
+      <option value="OTHER">未知</option>
+    </select><br>
+    <input type="file" id="custom-avatar" name="custom-avatar" style="display:none;">
+    <input type="hidden" id="avatar-url" name="avatar-url">
+    <button type="submit">保存并提交</button>
+    <button type="button" onclick="location.href='personal-info.html'">返回</button>
+  </form>
+</div>
+
+<div id="avatar-modal" style="display:none;">
+  <div id="avatar-options">
+    <img src="avatar/1.jpg" class="avatar-option" data-avatar-url="avatar/1.jpg">
+    <img src="avatar/2.jpg" class="avatar-option" data-avatar-url="avatar/2.jpg">
+    <img src="avatar/3.jpg" class="avatar-option" data-avatar-url="avatar/3.jpg">
+    <img src="avatar/4.jpg" class="avatar-option" data-avatar-url="avatar/4.jpg">
+    <img src="avatar/5.jpg" class="avatar-option" data-avatar-url="avatar/5.jpg">
+    <input type="file" id="upload-avatar" accept="image/*">
+  </div>
+  <button id="close-avatar-modal">返回</button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchProfile();
+    document.getElementById('change-avatar-btn').addEventListener('click', openAvatarModal);
+    document.getElementById('close-avatar-modal').addEventListener('click', closeAvatarModal);
+    document.getElementById('upload-avatar').addEventListener('change', handleAvatarUpload);
+    document.querySelectorAll('.avatar-option').forEach(option => {
+      option.addEventListener('click', selectAvatar);
+    });
+    document.getElementById('edit-info-form').addEventListener('submit', submitForm);
+  });
+
+  function fetchProfile() {
+    const token = localStorage.getItem('token');
+    fetch('/users/profile', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token
+      }
+    })
+            .then(response => response.json())
+            .then(data => {
+              document.getElementById('current-avatar').src = data.avatarUrl;
+              document.getElementById('username').value = data.username;
+              document.getElementById('email').value = data.email;
+              document.getElementById('gender').value = data.gender;
+            })
+            .catch(error => {
+              console.error('Error fetching profile:', error);
+              alert('Error fetching profile information');
+            });
+  }
+
+  function openAvatarModal() {
+    document.getElementById('avatar-modal').style.display = 'block';
+  }
+
+  function closeAvatarModal() {
+    document.getElementById('avatar-modal').style.display = 'none';
+  }
+
+  function selectAvatar(event) {
+    const avatarUrl = event.target.dataset.avatarUrl;
+    document.getElementById('current-avatar').src = avatarUrl;
+    document.getElementById('avatar-url').value = avatarUrl;
+    closeAvatarModal();
+  }
+
+  function handleAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('current-avatar').src = e.target.result;
+      }
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function submitForm(event) {
+    event.preventDefault();
+    const formData = new FormData();
+    const token = localStorage.getItem('token');
+    formData.append('username', document.getElementById('username').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('gender', document.getElementById('gender').value);
+    const customAvatar = document.getElementById('custom-avatar').files[0];
+    if (customAvatar) {
+      formData.append('customAvatar', customAvatar);
+    } else {
+      formData.append('avatarUrl', document.getElementById('avatar-url').value);
+    }
+
+    fetch('/users/update-profile', {
+      method: 'POST',
+      headers: {
+        'Authorization': token
+      },
+      body: formData
+    })
+            .then(response => {
+              if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+              }
+              return response.text();
+            })
+            .then(data => {
+              alert('Profile updated successfully');
+              window.location.href = 'personal-info.html';
+            })
+            .catch(error => {
+              console.error('Error updating profile:', error);
+              alert('Error updating profile: ' + error.message);
+            });
+  }
+</script>
+</body>
+</html>

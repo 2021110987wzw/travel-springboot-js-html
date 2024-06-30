@@ -1,0 +1,126 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Wrapper for Flexbox Layout */
+#wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sidebar Styles */
+#user-info {
+    width: 200px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    position: fixed; /* Fix the sidebar */
+    height: 100%; /* Full height */
+    overflow: auto; /* Scrollable if content overflows */
+}
+
+/* Main Content Area with Background Image */
+#create-team {
+    margin-left: 220px; /* Leave space for the fixed sidebar */
+    padding: 20px;
+    flex-grow: 1; /* Let the content grow to fill space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the content vertically */
+    align-items: center; /* Center the content horizontally */
+    height: 100vh; /* Ensure full viewport height */
+    box-sizing: border-box;
+    background-image: url('avatar/personal-info-background.jpg'); /* Path to your background image */
+    background-size: cover; /* Ensure the image covers the entire area */
+    background-position: center; /* Center create-team.jpgthe image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+
+/* Title Styles */
+#create-team h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    width: 100%; /* Ensure it stretches to the width of the form container */
+}
+
+/* Form Container Styles */
+form {
+    max-width: 600px;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Fields Styles */
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="datetime-local"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Submit Button Styles */
+button[type="submit"] {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #wrapper {
+        flex-direction: column;
+    }
+
+    #user-info {
+        width: 100%;
+        position: static;
+        height: auto;
+    }
+
+    #create-team {
+        margin-left: 0;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        height: auto;
+    }
+
+    form {
+        width: 100%;
+        margin: 0;
+    }
+}

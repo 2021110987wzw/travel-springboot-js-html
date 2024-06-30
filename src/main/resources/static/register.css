@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('avatar/background.jpg'); /* 背景图片 */
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff;
+}
+
+h2 {
+    text-align: center;
+    color: #0c0202;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 350px;
+    text-align: center;
+}
+
+form {
+    margin-top: 20px;
+}
+
+form div {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="text"], input[type="password"], input[type="email"], select {
+    width: 100%;
+    padding: 10px;
+    padding-left: 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.9); /* 半透明背景 */
+    color: #333;
+    font-size: 14px;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+button[type="submit"], button[type="button"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #197cd9;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover, button[type="button"]:hover {
+    background-color: #007bff;
+}
+
+.login-link {
+    margin-top: 10px;
+}
+
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    background-image: url('/avatar/modal-background.jpg'); /* 添加模态框背景 */
+    background-size: cover; /* 背景适应大小 */
+    background-position: center; /* 背景居中 */
+    margin: 10% auto; /* 修改margin使其更居中 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* 增加宽度 */
+    max-width: 700px; /* 增加最大宽度 */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.avatar-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-selection label {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px; /* 增加宽度 */
+    height: 80px; /* 增加高度 */
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: border-color 0.3s;
+}
+
+.avatar-selection label:hover {
+    border-color: #007bff;
+}
+
+.avatar-selection img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%; /* 圆形头像 */
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}
