@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户注册</title>
+  <link rel="stylesheet" href="register.css">
+</head>
+<body>
+<div class="container">
+  <h2>注册</h2>
+  <form id="registrationForm" enctype="multipart/form-data">
+    <div>
+      <label for="username">用户名:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="password">密码:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <label for="confirmPassword">确认密码:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required>
+    </div>
+    <div>
+      <label for="email">邮箱:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+      <label for="gender">性别:</label>
+      <select id="gender" name="gender" required>
+        <option value="">选择</option>
+        <option value="MALE">男</option>
+        <option value="FEMALE">女</option>
+        <option value="OTHER">未知</option>
+      </select>
+    </div>
+    <div>
+      <label>头像:</label>
+      <button type="button" id="chooseAvatarButton">选择头像</button>
+      <input type="hidden" id="avatarUrl" name="avatarUrl">
+    </div>
+    <button type="submit">注册</button>
+    <div class="login-link">
+      <a href="/login.html">已有帐号？去登录</a>
+    </div>
+  </form>
+</div>
+<!-- Modal -->
+<div id="avatarModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div class="avatar-selection">
+      <input type="radio" id="avatar1" name="avatar" value="1.jpg">
+      <label for="avatar1"><img src="avatar/1.jpg" alt="Avatar 1"></label>
+      <input type="radio" id="avatar2" name="avatar" value="2.jpg">
+      <label for="avatar2"><img src="avatar/2.jpg" alt="Avatar 2"></label>
+      <input type="radio" id="avatar3" name="avatar" value="3.jpg">
+      <label for="avatar3"><img src="avatar/3.jpg" alt="Avatar 3"></label>
+      <input type="radio" id="avatar4" name="avatar" value="4.jpg">
+      <label for="avatar4"><img src="avatar/4.jpg" alt="Avatar 4"></label>
+      <input type="radio" id="avatar5" name="avatar" value="5.jpg">
+      <label for="avatar5"><img src="avatar/5.jpg" alt="Avatar 5"></label>
+    </div>
+    <div>
+      <label for="customAvatar">上传头像:</label>
+      <input type="file" id="customAvatar" name="customAvatar" accept="image/*">
+    </div>
+  </div>
+</div>
+<script>
+  // Get the modal
+  var modal = document.getElementById('avatarModal');
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("chooseAvatarButton");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  // Register form submit event
+  document.getElementById('registrationForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match. Please try again.');
+      return;
+    }
+
+    var formData = new FormData();
+    formData.append('username', document.getElementById('username').value);
+    formData.append('password', password);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('gender', document.getElementById('gender').value);
+    formData.append('avatarUrl', document.getElementById('avatarUrl').value);
+
+    var customAvatarInput = document.getElementById('customAvatar');
+    if (customAvatarInput.files.length > 0) {
+      formData.append('customAvatar', customAvatarInput.files[0]);
+    }
+
+    fetch('/users/register', {
+      method: 'POST',
+      body: formData
+    })
+            .then(response => {
+              if (response.status === 201) {
+                alert('Registration successful! You can now login.');
+                window.location.href = '/login.html';
+              } else {
+                response.text().then(text => alert('Registration failed: ' + text));
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+  });
+
+  // Avatar selection logic
+  document.querySelectorAll('input[name="avatar"]').forEach(function(radio) {
+    radio.addEventListener('change', function(event) {
+      document.getElementById('avatarUrl').value = 'avatar/' + event.target.value;
+      modal.style.display = "none";
+    });
+  });
+
+  // Custom avatar selection logic
+  document.getElementById('customAvatar').addEventListener('change', function(event) {
+    document.getElementById('avatarUrl').value = 'custom-avatar';
+    modal.style.display = "none";
+  });
+</script>
+</body>
+</html>

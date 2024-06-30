@@ -1,0 +1,227 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+#wrapper {
+    display: flex;
+}
+
+#user-info {
+    position: fixed; /* 固定左侧导航栏 */
+    width: 200px;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    top: 0; /* 固定在页面顶部 */
+    left: 0; /* 固定在页面左侧 */
+}
+
+#user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#personal-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-left: 220px; /* 确保右侧内容不会被覆盖 */
+    padding: 40px; /* 增加内边距 */
+    background-color: rgba(255, 255, 255, 0.9); /* 背景半透明，突出内容 */
+    border-radius: 10px; /* 增加圆角 */
+    background-image: url('avatar/personal-info-background.jpg'); /* 设置背景图片 */
+    background-size: cover; /* 背景图片覆盖整个区域 */
+    background-position: center; /* 背景图片居中 */
+}
+
+#personal-info h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+    color: #333;
+}
+
+#personal-info p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #666;
+}
+
+#user-avatar-right {
+    border-radius: 50%;
+    margin: 20px 0;
+    width: 150px; /* 调整头像大小 */
+    height: 150px; /* 调整头像大小 */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* 防止内容溢出 */
+}
+
+#user-info {
+    width: 200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed; /* 固定在左侧 */
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(248, 249, 250, 0.95); /* 设置半透明背景颜色 */
+    z-index: 1000; /* 确保在内容之上 */
+}
+
+#user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+}
+
+button {
+    display: block;
+    width: 90%; /* 调整按钮宽度 */
+    padding: 8px; /* 缩小按钮 */
+    margin-bottom: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px; /* 增加圆角 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+    transition: background-color 0.3s, box-shadow 0.3s; /* 添加过渡效果 */
+    font-size: 14px; /* 调整字体大小 */
+}
+
+button:hover {
+    background-color: #0056b3; /* 添加悬停效果 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 增加悬停时的阴影 */
+}
+
+#personal-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-left: 220px; /* 确保右侧内容不会被覆盖 */
+    padding: 40px; /* 增加内边距 */
+    background-color: rgba(255, 255, 255, 0.9); /* 背景半透明，突出内容 */
+    border-radius: 10px; /* 增加圆角 */
+    background-image: url('avatar/personal-info-background.jpg'); /* 设置背景图片 */
+    background-size: cover; /* 背景图片覆盖整个区域 */
+    background-position: center; /* 背景图片居中 */
+}
+
+#personal-info h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+    color: #333;
+}
+
+#personal-info p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #666;
+}
+
+#user-avatar-right {
+    border-radius: 50%;
+    margin: 20px 0;
+    width: 150px; /* 调整头像大小 */
+    height: 150px; /* 调整头像大小 */
+}
+
+#edit-btn {
+    margin-top: 20px;
+    padding: 8px 1px; /* 缩小按钮 */
+    width: 120px; /* 设置按钮的固定宽度 */
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-size: 14px; /* 调整字体大小 */
+}
+
+#edit-btn:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 水印容器的样式 */
+#watermark-container {
+    display: flex;
+    flex-grow: 1;
+    border-left: 2px solid #ccc;
+    flex-direction: column;
+}
+
+#watermark {
+    font-size: 24px;
+    opacity: 0.5;
+    margin: auto;
+}
+
+
+#edit-btn:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 水印容器的样式 */
+#watermark-container {
+    display: flex;
+    flex-grow: 1;
+    border-left: 2px solid #ccc;
+    flex-direction: column;
+}
+
+#watermark {
+    font-size: 24px;
+    opacity: 0.5;
+    margin: auto;
+}

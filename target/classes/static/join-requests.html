@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>消息</title>
+  <link rel="stylesheet" href="join-requests.css">
+  <link rel="stylesheet" href="profile.css"> <!-- 导入 profile 页面的样式 -->
+</head>
+<body>
+<div id="wrapper">
+  <div id="user-info">
+    <img id="user-avatar" src="" alt="User Avatar" width="100" height="100">
+    <button onclick="location.href='profile.html'">主页</button>
+    <button onclick="location.href='personal-info.html'">查看个人信息</button>
+    <button onclick="location.href='created-teams.html'">我管理的队伍</button>
+    <button onclick="location.href='joined-teams.html'">我加入的队伍</button>
+    <button onclick="location.href='create-team.html'">新建队伍</button>
+    <button onclick="location.href='all-teams.html'">搜索队伍</button>
+    <button onclick="location.href='join-requests.html'">消息</button>
+    <button onclick="location.href='login.html'">退出登录</button>
+  </div>
+  <div id="join-requests-container">
+    <h1>消息</h1>
+    <div id="managed-teams-section">
+      <h2>我管理的队伍</h2>
+      <ul id="managed-teams-list"></ul>
+    </div>
+    <div id="requested-teams-section">
+      <h2>我发出的申请</h2>
+      <ul id="requested-teams-list"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem('token');
+
+  fetch('/users/profile', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `${token}`
+    }
+  })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('user-avatar').src = data.avatarUrl; // 更新左侧用户头像
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            window.location.href = 'login.html';
+          });
+
+  fetch('/join-requests', {
+    method: 'GET',
+    headers: {
+      'Authorization': token
+    }
+  })
+          .then(response => response.json())
+          .then(joinRequestsMap => {
+            const managedTeamsList = document.getElementById('managed-teams-list');
+            const requestedTeamsList = document.getElementById('requested-teams-list');
+
+            // Display managed teams' join requests
+            joinRequestsMap.managedTeams.forEach(joinRequest => {
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `
+          <strong>${joinRequest.userDisplayName} 申请加入队伍 "${joinRequest.teamDisplayName}"</strong><br>
+          申请时间: ${new Date(joinRequest.createdAt).toLocaleString()}<br>
+          状态: ${getStatusLabel(joinRequest.approved, joinRequest.processed)}<br>
+        `;
+              if (!joinRequest.processed) {
+                const approveBtn = document.createElement('button');
+                approveBtn.textContent = '同意';
+                approveBtn.classList.add('approve-btn');
+                approveBtn.dataset.joinRequestId = joinRequest.id;
+                listItem.appendChild(approveBtn);
+
+                const rejectBtn = document.createElement('button');
+                rejectBtn.textContent = '拒绝';
+                rejectBtn.classList.add('reject-btn');
+                rejectBtn.dataset.joinRequestId = joinRequest.id;
+                listItem.appendChild(rejectBtn);
+
+                // Add event listeners for approve and reject buttons
+                approveBtn.addEventListener('click', () => handleApprove(joinRequest.id));
+                rejectBtn.addEventListener('click', () => handleReject(joinRequest.id));
+              } else {
+                listItem.innerHTML += `<em>${joinRequest.approved ? '同意' : '拒绝'}</em>`;
+              }
+              managedTeamsList.appendChild(listItem);
+            });
+
+            // Display user's join requests
+            joinRequestsMap.requestedTeams.forEach(joinRequest => {
+              const listItem = document.createElement('li');
+              listItem.innerHTML = `
+          <strong>申请加入 "${joinRequest.teamDisplayName}"</strong><br>
+          申请时间: ${new Date(joinRequest.createdAt).toLocaleString()}<br>
+          状态: ${getStatusLabel(joinRequest.approved, joinRequest.processed)}
+        `;
+              requestedTeamsList.appendChild(listItem);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching join requests:', error);
+            alert('Failed to fetch join requests');
+          });
+
+  function getStatusLabel(approved, processed) {
+    if (!processed) {
+      return '待处理';
+    } else {
+      return approved ? '已同意' : '已拒绝';
+    }
+  }
+
+  function handleApprove(joinRequestId) {
+    fetch(`/join-request/process/${joinRequestId}?approved=true`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': token
+      }
+    })
+            .then(response => {
+              if (response.ok) {
+                return response.text();
+              }
+              throw new Error('Failed to approve join request');
+            })
+            .then(message => {
+              alert(message);
+              // Optional: Update UI to reflect approval
+              // For example, remove approve/reject buttons and show "Approved" status
+            })
+            .catch(error => {
+              console.error('Error approving join request:', error);
+              alert('Failed to approve join request');
+            });
+  }
+
+  function handleReject(joinRequestId) {
+    fetch(`/join-request/process/${joinRequestId}?approved=false`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': token
+      }
+    })
+            .then(response => {
+              if (response.ok) {
+                return response.text();
+              }
+              throw new Error('Failed to reject join request');
+            })
+            .then(message => {
+              alert(message);
+              // Optional: Update UI to reflect rejection
+              // For example, remove approve/reject buttons and show "Rejected" status
+            })
+            .catch(error => {
+              console.error('Error rejecting join request:', error);
+              alert('Failed to reject join request');
+            });
+  }
+</script>
+</body>
+</html>

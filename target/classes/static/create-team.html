@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新建队伍</title>
+  <link rel="stylesheet" href="create-team.css">
+  <link rel="stylesheet" href="profile.css"> <!-- 导入 profile 页面的样式 -->
+</head>
+<body>
+<div id="wrapper">
+  <div id="user-info">
+    <img id="user-avatar" src="" alt="User Avatar" width="100" height="100">
+    <button onclick="location.href='profile.html'">主页</button>
+    <button onclick="location.href='personal-info.html'">查看个人信息</button>
+    <button onclick="location.href='created-teams.html'">我管理的队伍</button>
+    <button onclick="location.href='joined-teams.html'">我加入的队伍</button>
+    <button onclick="location.href='create-team.html'">新建队伍</button>
+    <button onclick="location.href='all-teams.html'">搜索队伍</button>
+    <button onclick="location.href='join-requests.html'">消息</button>
+    <button onclick="location.href='login.html'">退出登录</button>
+  </div>
+  <div id="create-team">
+    <h1>新建队伍</h1>
+    <form id="create-team-form">
+      <label for="team-name">队伍名称:</label>
+      <input type="text" id="team-name" name="team-name" required><br>
+      <label for="destination">目的地:</label>
+      <input type="text" id="destination" name="destination" required><br>
+      <label for="departure-time">出发时间:</label>
+      <input type="datetime-local" id="departure-time" name="departure-time" required><br>
+      <label for="max-members">最大成员数:</label>
+      <input type="number" id="max-members" name="max-members" required><br>
+      <label for="team-description">队伍简介:</label>
+      <textarea id="team-description" name="team-description" required></textarea><br>
+      <button type="submit">提交</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem('token');
+
+  fetch('/users/profile', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `${token}`
+    }
+  })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('user-avatar').src = data.avatarUrl; // 更新左侧用户头像
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            window.location.href = 'login.html';
+          });
+
+  document.getElementById("create-team-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    const teamName = document.getElementById("team-name").value;
+    const destination = document.getElementById("destination").value;
+    const departureTime = document.getElementById("departure-time").value;
+    const maxMembers = document.getElementById("max-members").value;
+    const teamDescription = document.getElementById("team-description").value;
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify({ teamName, destination, departureTime, maxMembers, teamDescription })
+    };
+
+    fetch('/users/create-team', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+              // Handle success response
+              console.log("Team created:", data);
+              alert("Team created successfully!");
+              // Redirect to profile page or do something else
+            })
+            .catch(error => {
+              // Handle error
+              console.error('Error creating team:', error);
+              alert("Error creating team. Please try again.");
+            });
+  });
+</script>
+</body>
+</html>

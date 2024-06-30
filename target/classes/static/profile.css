@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper {
+    display: flex;
+    height: 100vh; /* 设置高度占据整个视口 */
+}
+
+#user-info {
+    width: 200px; /* 左侧部分宽度 */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 2px solid #ccc; /* 左侧分界线 */
+}
+
+#user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* 将头像变成圆形 */
+    margin-bottom: 20px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#watermark-container {
+    flex-grow: 1; /* 右侧部分占满剩余空间 */
+    border-left: 2px solid #ccc; /* 右侧分界线 */
+    display: flex;
+    flex-direction: column;
+}
+
+#watermark {
+    font-size: 24px;
+    opacity: 0.5; /* 设置水印透明度 */
+    margin: auto; /* 水印居中 */
+}

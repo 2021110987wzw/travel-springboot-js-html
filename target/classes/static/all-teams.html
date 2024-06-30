@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索队伍</title>
+  <link rel="stylesheet" href="all-teams.css">
+  <link rel="stylesheet" href="profile.css"> <!-- 导入 profile 页面的样式 -->
+</head>
+<body>
+<div id="wrapper">
+  <div id="user-info">
+    <img id="user-avatar" src="" alt="User Avatar" width="100" height="100">
+    <button onclick="location.href='profile.html'">主页</button>
+    <button onclick="location.href='personal-info.html'">查看个人信息</button>
+    <button onclick="location.href='created-teams.html'">我管理的队伍</button>
+    <button onclick="location.href='joined-teams.html'">我加入的队伍</button>
+    <button onclick="location.href='create-team.html'">新建队伍</button>
+    <button onclick="location.href='all-teams.html'">搜索队伍</button>
+    <button onclick="location.href='join-requests.html'">消息</button>
+    <button onclick="location.href='login.html'">退出登录</button>
+  </div>
+  <div id="teams-container">
+    <!-- Teams will be rendered here -->
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    fetchUserInfo();
+    fetchTeams();
+  });
+
+  async function fetchUserInfo() {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/users/profile', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      });
+      if (!response.ok) throw new Error('Network response was not ok');
+      const userData = await response.json();
+      updateUserInfo(userData);
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+      alert('获取用户信息时出错，请稍后再试。');
+    }
+  }
+
+  function updateUserInfo(userData) {
+    const userAvatar = document.getElementById('user-avatar');
+    userAvatar.src = userData.avatarUrl; // Assuming userData.avatarUrl contains the URL of the avatar image
+  }
+
+  async function fetchTeams() {
+    try {
+      const response = await fetch('/teams/all-teams');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const teams = await response.json();
+      renderTeams(teams);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+      alert('获取队伍信息时出错，请稍后再试。');
+    }
+  }
+
+  function renderTeams(teams) {
+    const teamsContainer = document.getElementById('teams-container');
+    teamsContainer.innerHTML = ''; // Clear previous content
+    teams.forEach(team => {
+      const teamDiv = document.createElement('div');
+      teamDiv.classList.add('team');
+
+      const h3 = document.createElement('h3');
+      h3.textContent = team.teamName; // Display team name
+      teamDiv.appendChild(h3);
+
+      const destination = document.createElement('p');
+      destination.textContent = '目的地: ' + team.destination;
+      teamDiv.appendChild(destination);
+
+      const departureTime = document.createElement('p');
+      departureTime.textContent = '出发时间: ' + new Date(team.departureTime).toLocaleString();
+      teamDiv.appendChild(departureTime);
+
+      const maxMembers = document.createElement('p');
+      maxMembers.textContent = '最大成员数: ' + team.maxMembers;
+      teamDiv.appendChild(maxMembers);
+
+      const currentMembers = document.createElement('p');
+      currentMembers.textContent = '当前成员数: ' + team.currentMembers;
+      teamDiv.appendChild(currentMembers);
+
+      const description = document.createElement('p');
+      description.textContent = team.teamDescription; // Display team description
+      teamDiv.appendChild(description);
+
+      const joinBtn = document.createElement('button');
+      joinBtn.textContent = team.maxMembers === team.currentMembers ? '人数已满' : '申请加入';
+      joinBtn.classList.add('join-btn');
+      if (team.maxMembers === team.currentMembers) {
+        joinBtn.classList.add('disabled');
+        joinBtn.disabled = true;
+      } else {
+        joinBtn.addEventListener('click', () => applyToJoin(team.id));
+      }
+      teamDiv.appendChild(joinBtn);
+
+      teamsContainer.appendChild(teamDiv);
+    });
+  }
+
+  async function applyToJoin(teamId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('请先登录');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    try {
+      const response = await fetch('/join-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token // Include the token in the request header
+        },
+        body: JSON.stringify({ team: { id: teamId } }) // Ensure team ID is correctly passed
+      });
+
+      if (response.status === 201) {
+        alert('加入请求已提交');
+      } else if (response.status === 409) {
+        alert('你已经在这个队伍中了');
+      } else {
+        const data = await response.json();
+        alert('提交加入请求时出错: ' + data.message);
+      }
+    } catch (error) {
+      console.error('提交加入请求时出错:', error);
+      alert('提交加入请求时出错，请稍后再试。');
+    }
+  }
+</script>
+</body>
+</html>

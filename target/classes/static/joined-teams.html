@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我加入的队伍</title>
+  <link rel="stylesheet" href="joined-teams.css">
+  <link rel="stylesheet" href="profile.css"> <!-- 导入 profile 页面的样式 -->
+<!--  <link rel="stylesheet" href="created-teams.css"> &lt;!&ndash; 导入与 created-teams.html 相同的样式 &ndash;&gt;-->
+</head>
+<body>
+<div id="wrapper">
+  <div id="user-info">
+    <img id="user-avatar" src="" alt="User Avatar" width="100" height="100">
+    <button onclick="location.href='profile.html'">主页</button>
+    <button onclick="location.href='personal-info.html'">查看个人信息</button>
+    <button onclick="location.href='created-teams.html'">我管理的队伍</button>
+    <button onclick="location.href='joined-teams.html'">我加入的队伍</button>
+    <button onclick="location.href='create-team.html'">新建队伍</button>
+    <button onclick="location.href='all-teams.html'">搜索队伍</button>
+    <button onclick="location.href='join-requests.html'">消息</button>
+    <button onclick="location.href='login.html'">退出登录</button>
+  </div>
+  <div id="joined-teams">
+    <h1>我加入的队伍</h1>
+    <div id="joined-teams-list" class="teams-list"></div>
+  </div>
+</div>
+
+<script>
+  const token = localStorage.getItem('token');
+
+  fetch('/users/profile', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `${token}`
+    }
+  })
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('user-avatar').src = data.avatarUrl;
+            const joinedTeamsList = document.getElementById('joined-teams-list');
+            data.joinedTeams.forEach(team => {
+              const teamDiv = document.createElement('div');
+              teamDiv.classList.add('team');
+
+              const h3 = document.createElement('h3');
+              h3.textContent = team.teamName;
+              teamDiv.appendChild(h3);
+
+              const destination = document.createElement('p');
+              destination.textContent = '目的地: ' + team.destination;
+              teamDiv.appendChild(destination);
+
+              const departureTime = document.createElement('p');
+              departureTime.textContent = '出发时间: ' + new Date(team.departureTime).toLocaleString();
+              teamDiv.appendChild(departureTime);
+
+              const maxMembers = document.createElement('p');
+              maxMembers.textContent = '最大成员数: ' + team.maxMembers;
+              teamDiv.appendChild(maxMembers);
+
+              const currentMembers = document.createElement('p');
+              currentMembers.textContent = '当前成员数: ' + team.currentMembers;
+              teamDiv.appendChild(currentMembers);
+
+              const description = document.createElement('p');
+              description.textContent = '队伍简介:\n' + team.teamDescription;
+              teamDiv.appendChild(description);
+
+              const membersList = document.createElement('ul');
+
+              // 添加成员标题
+              const membersTitle = document.createElement('h4');
+              membersTitle.textContent = '队伍成员:';
+              teamDiv.appendChild(membersTitle);
+
+              team.members.forEach(member => {
+                const memberItem = document.createElement('li');
+                memberItem.innerHTML = `
+          <strong>用户名:</strong> ${member.username}<br>
+          <strong>邮箱:</strong> ${member.email}<br>
+          <strong>Role:</strong> ${member.role}<br>
+        `;
+                membersList.appendChild(memberItem);
+              });
+              teamDiv.appendChild(membersList);
+
+              // 添加退出队伍按钮
+              const leaveButton = document.createElement('button');
+              leaveButton.textContent = '退出队伍';
+              leaveButton.onclick = () => leaveTeam(team.id, data.userId); // 调用退出队伍函数
+              teamDiv.appendChild(leaveButton);
+
+              joinedTeamsList.appendChild(teamDiv);
+            });
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            window.location.href = 'login.html';
+          });
+
+  function leaveTeam(teamId, userId) {
+    fetch(`/teams/${teamId}/leave/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      }
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to leave team.');
+              }
+              return response.text();
+            })
+            .then(message => {
+              alert(message); // 弹出成功退出队伍的消息
+              location.reload(); // 重新加载页面以更新列表
+            })
+            .catch(error => {
+              console.error('Error leaving team:', error);
+              alert('Failed to leave team.');
+            });
+  }
+</script>
+</body>
+</html>
